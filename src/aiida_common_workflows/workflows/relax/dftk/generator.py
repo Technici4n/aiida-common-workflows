@@ -53,7 +53,7 @@ class DftkCommonRelaxInputGenerator(CommonRelaxInputGenerator):
             (ElectronicType.METAL, ElectronicType.INSULATOR, ElectronicType.UNKNOWN, ElectronicType.AUTOMATIC)
         )
         spec.inputs['engines']['relax']['code'].valid_type = CodeType('dftk')
-        spec.inputs['protocol'].valid_type = ChoiceType(('fastest', 'fast', 'moderate', 'precise'))
+        spec.inputs['protocol'].valid_type = ChoiceType(('fastest', 'fast', 'moderate', 'moderate_refinement', 'precise'))
 
     def _construct_builder(self, **kwargs) -> engine.ProcessBuilder:
         """Construct a process builder based on the provided keyword arguments.
