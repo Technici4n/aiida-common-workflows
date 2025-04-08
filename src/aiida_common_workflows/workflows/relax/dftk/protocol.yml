@@ -68,11 +68,11 @@ moderate:
                   - $function: "compute_forces_cart"
                   - $function: "compute_stresses_cart"
 
-moderate_refinement:
-    name: "moderate_refinement"
-    description: Protocol to relax a structure with normal precision at moderate computational cost + refine it.
+refinement:
+    name: "refinement"
+    description: Protocol to relax a structure with good precision at low ecut + refine with very high ecut.
     pseudo_family: "PseudoDojo/0.5/PBE/SR/standard/upf"
-    cutoff_stringency: "normal"
+    cutoff_stringency: "low" # low on purpose ;)
     base:
         kpoints_distance: 0.2 # [1/AA]
         dftk:
@@ -82,19 +82,16 @@ moderate_refinement:
                     temperature: 0.00225 # Ha
                 scf:
                     $kwargs:
-                        maxiter: 200
+                        maxiter: 300
                         is_converged:
-                            $args: 1.0e-9
+                            $args: 1.0e-10
                             $symbol: "ScfConvergenceDensity"
                     $function: "self_consistent_field"
                     checkpointfile: "scfres.jld2"
                 postscf:
                   - $function: "compute_forces_cart"
-                  - $function: "compute_stresses_cart"
+                #   - $function: "compute_stresses_cart"
                 refinement:
-                    basis_kwargs:
-                        # TODO: source from pseudo hints ;)
-                        Ecut: 40
                     $kwargs:
                         tol: 1.0e-12
 

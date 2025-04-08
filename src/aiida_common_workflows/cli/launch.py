@@ -39,7 +39,7 @@ def cmd_launch():
 @options.STRUCTURE()
 @options.CODES()
 @options.PROTOCOL(
-    type=click.Choice(['fast', 'moderate', 'moderate_refinement', 'precise', 'verification-PBE-v1', 'verification-PBE-v1-sirius']),
+    type=click.Choice(['fast', 'moderate', 'refinement', 'precise', 'verification-PBE-v1', 'verification-PBE-v1-sirius']),
     default='fast',
 )
 @options.RELAX_TYPE()
