@@ -53,7 +53,7 @@ class DftkCommonRelaxInputGenerator(CommonRelaxInputGenerator):
             (ElectronicType.METAL, ElectronicType.INSULATOR, ElectronicType.UNKNOWN, ElectronicType.AUTOMATIC)
         )
         spec.inputs['engines']['relax']['code'].valid_type = CodeType('dftk')
-        spec.inputs['protocol'].valid_type = ChoiceType(('fastest', 'fast', 'moderate', 'precise'))
+        spec.inputs['protocol'].valid_type = ChoiceType(('fastest', 'fast', 'moderate', 'refinement', 'precise'))
 
     def _construct_builder(self, **kwargs) -> engine.ProcessBuilder:
         """Construct a process builder based on the provided keyword arguments.
@@ -109,6 +109,17 @@ class DftkCommonRelaxInputGenerator(CommonRelaxInputGenerator):
         # For PseudoDojo potentials, add an rcut of 10 to match results of QE
         if pseudo_family_label.startswith('PseudoDojo'):
            override['dftk']['pseudo_rcut'] = orm.Float(10)
+
+        # Quick hack for refinement
+        dftk_params = protocol['base']['dftk']['parameters']
+        if 'refinement' in dftk_params:
+            high_ecutt_wfc, _ = pseudo_family.get_recommended_cutoffs(
+                structure=structure, stringency="high", unit='Eh')
+            override['dftk']['parameters']['refinement'] = {
+                'basis_kwargs': {
+                    'Ecut': 2*high_ecutt_wfc,
+                },
+            }
 
         builder = self.process_class.get_builder()
 
